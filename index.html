@@ -18,11 +18,11 @@
     <nav>
         <div class="container">
             <ul>
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="photos.html">照片墙</a></li>
-                <li><a href="videos.html">视频集</a></li>
-                <li><a href="stories.html">成长故事</a></li>
-                <li><a href="guestbook.html">留言板</a></li>
+                <li><a href="index.html" class="active" data-i18n="nav_home">首页</a></li>
+                <li><a href="photos.html" data-i18n="nav_photos">照片墙</a></li>
+                <li><a href="videos.html" data-i18n="nav_videos">视频集</a></li>
+                <li><a href="stories.html" data-i18n="nav_stories">成长故事</a></li>
+                <li><a href="guestbook.html" data-i18n="nav_guestbook">留言板</a></li>
             </ul>
         </div>
     </nav>
@@ -31,48 +31,48 @@
         <div class="container">
             <section class="hero">
                 <div class="hero-content">
-                    <h2>欢迎来到Cayden的小天地</h2>
-                    <p>这里记录着Cayden成长的每一个精彩瞬间，分享他的笑容、故事和点滴进步。</p>
+                    <h2 data-i18n="welcome_title">欢迎来到Cayden的小天地</h2>
+                    <p data-i18n="welcome_desc">这里记录着Cayden成长的每一个精彩瞬间，分享他的笑容、故事和点滴进步。</p>
                 </div>
             </section>
 
             <section class="featured">
-                <h2>精彩瞬间</h2>
+                <h2 data-i18n="featured_moments">精彩瞬间</h2>
                 <div class="featured-grid">
                     <div class="featured-item">
                         <img src="./static/images/placeholder1.jpg" alt="精彩瞬间1">
-                        <h3>第一次上学</h3>
-                        <p>Cayden第一天上学的照片，他看起来既兴奋又有点紧张。</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3 data-i18n="first_school_day">第一次上学</h3>
+                        <p data-i18n="first_school_day_desc">Cayden第一天上学的照片，他看起来既兴奋又有点紧张。</p>
+                        <a href="#0" class="btn" data-target="detail" data-i18n="view_details">查看详情</a>
                     </div>
                     <div class="featured-item">
                         <img src="./static/images/placeholder2.jpg" alt="精彩瞬间2">
-                        <h3>六岁生日派对</h3>
-                        <p>和朋友们一起庆祝六岁生日的欢乐时光。</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3 data-i18n="birthday_party">六岁生日派对</h3>
+                        <p data-i18n="birthday_party_desc">和朋友们一起庆祝六岁生日的欢乐时光。</p>
+                        <a href="#0" class="btn" data-target="detail" data-i18n="view_details">查看详情</a>
                     </div>
                     <div class="featured-item">
                         <img src="./static/images/placeholder3.jpg" alt="精彩瞬间3">
-                        <h3>第一次骑自行车</h3>
-                        <p>Cayden学会骑自行车的那一刻，脸上洋溢着自豪的笑容。</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3 data-i18n="first_bike">第一次骑自行车</h3>
+                        <p data-i18n="first_bike_desc">Cayden学会骑自行车的那一刻，脸上洋溢着自豪的笑容。</p>
+                        <a href="#0" class="btn" data-target="detail" data-i18n="view_details">查看详情</a>
                     </div>
                 </div>
             </section>
 
             <section class="recent-posts">
-                <h2>最新故事</h2>
+                <h2 data-i18n="recent_stories">最新故事</h2>
                 <div class="post">
                     <h3>Cayden的画作展示</h3>
                     <p class="post-meta">发布于 2023年10月15日</p>
                     <p>今天Cayden创作了一幅令人惊叹的画作，他用色彩鲜艳的颜料描绘了我们全家去公园野餐的场景...</p>
-                    <a href="#" class="btn">阅读全文</a>
+                    <a href="#" class="btn" data-i18n="read_more">阅读全文</a>
                 </div>
                 <div class="post">
                     <h3>第一次游泳课</h3>
                     <p class="post-meta">发布于 2023年9月28日</p>
                     <p>今天是Cayden第一次参加游泳课，虽然一开始有点害怕水，但在教练的鼓励下，他很快就适应了...</p>
-                    <a href="#" class="btn">阅读全文</a>
+                    <a href="#" class="btn" data-i18n="read_more">阅读全文</a>
                 </div>
             </section>
         </div>
@@ -89,6 +89,7 @@
         </div>
     </footer>
 
+    <script src="./static/js/translations.js"></script>
     <script src="./static/js/main.js"></script>
 </body>
 </html>
