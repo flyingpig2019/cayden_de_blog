@@ -8,7 +8,10 @@
 - **照片墙**：按分类展示Cayden的照片，支持筛选和灯箱效果
 - **视频集**：收集和展示Cayden的视频记录
 - **成长故事**：记录Cayden生活中的点滴和成长经历
-- **留言板**：访客可以留言互动，使用SQLite数据库存储留言
+- **留言板**：访客可以留言互动，支持三种实现方式：
+  - 基于SQLite数据库的完整留言功能
+  - 基于Formspree的邮件通知留言板（适用于静态网站）
+  - 基于EmailJS的邮件通知留言板（适用于静态网站）
 
 ## 技术栈
 
@@ -18,6 +21,52 @@
 - **静态资源**：图片、CSS和JavaScript文件
 
 ## 如何运行
+
+### 本地运行
+
+1. 克隆仓库到本地
+   ```
+   git clone https://github.com/你的用户名/cayden_de_blog.git
+   cd cayden_de_blog
+   ```
+
+2. 安装依赖
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. 运行应用
+   ```
+   python app.py
+   ```
+
+4. 在浏览器中访问 `http://127.0.0.1:8000`
+
+### 部署到GitHub
+
+1. 在GitHub上创建新仓库
+   - 登录GitHub账号
+   - 点击右上角的"+"按钮，选择"New repository"
+   - 填写仓库名称（例如：cayden_de_blog）
+   - 选择公开或私有
+   - 点击"Create repository"
+
+2. 初始化本地Git仓库并推送到GitHub
+   ```
+   git init
+   git add .
+   git commit -m "初始提交"
+   git branch -M main
+   git remote add origin https://github.com/你的用户名/cayden_de_blog.git
+   git push -u origin main
+   ```
+
+3. 设置GitHub Pages（静态网站部分）
+   - 在GitHub仓库页面，点击"Settings"
+   - 滚动到"GitHub Pages"部分
+   - 在"Source"下拉菜单中选择"main"分支
+   - 点击"Save"
+   - 等待几分钟后，您的网站将在显示的URL上可用
 
 ### 安装依赖
 
@@ -55,12 +104,24 @@ python app.py
 
 ## 留言板功能
 
-留言板功能使用SQLite数据库存储用户留言。主要特点：
+留言板功能提供三种实现方式：
 
-1. 用户可以提交姓名、邮箱和留言内容
-2. 留言会实时显示在页面上
-3. 所有留言按时间倒序排列
-4. 数据安全存储在SQLite数据库中
+### 1. 基于SQLite数据库的完整留言功能
+
+- 用户可以提交姓名、邮箱和留言内容
+- 留言会实时显示在页面上
+- 所有留言按时间倒序排列
+- 数据安全存储在SQLite数据库中
+- 需要服务器支持（如PythonAnywhere或Heroku）
+
+### 2. 基于邮件通知的静态留言板
+
+- 适用于GitHub Pages等静态网站托管平台
+- 支持两种实现方式：
+  - **Formspree实现**：简单易用，无需JavaScript知识
+  - **EmailJS实现**：提供更多自定义选项
+- 用户提交的留言将通过邮件发送给网站管理员
+- 示例文件：`formspree_guestbook.html`和`email_guestbook.html`
 
 ## 项目结构
 
@@ -69,7 +130,11 @@ python app.py
 - `photos.html` - 照片墙页面
 - `videos.html` - 视频集页面
 - `stories.html` - 成长故事页面
-- `guestbook.html` - 留言板页面
+- `guestbook.html` - 数据库版留言板页面
+- `static_guestbook.html` - 静态版留言板页面（无功能）
+- `email_guestbook.html` - 基于EmailJS的邮件通知留言板
+- `formspree_guestbook.html` - 基于Formspree的邮件通知留言板
+- `DEPLOYMENT_GUIDE.md` - 部署指南文档
 - `static/` - 静态资源目录
   - `css/` - CSS样式文件
   - `js/` - JavaScript脚本文件
