@@ -54,31 +54,15 @@
                         </div>
                         <button type="submit" class="btn">提交留言</button>
                     </form>
-                    <p class="form-note">注：您的留言将通过GitHub Issues系统进行管理，您也可以直接在<a href="https://github.com/username/cayden-blog/issues" target="_blank">GitHub Issues</a>页面留言。</p>
+                    <p class="form-note">注：您的留言将被安全地存储在我们的数据库中。</p>
                 </div>
 
                 <div class="comments">
                     <h3>最新留言</h3>
-                    <!-- Disqus评论系统将在这里加载 -->
-                    <div id="disqus_thread"></div>
-                    <script>
-                        /**
-                        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-                        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-                        /*
-                        var disqus_config = function () {
-                        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-                        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                        };
-                        */
-                        (function() { // DON'T EDIT BELOW THIS LINE
-                        var d = document, s = d.createElement('script');
-                        s.src = 'https://cayden-blog.disqus.com/embed.js';
-                        s.setAttribute('data-timestamp', +new Date());
-                        (d.head || d.body).appendChild(s);
-                        })();
-                    </script>
-                    <noscript>请启用JavaScript以查看<a href="https://disqus.com/?ref_noscript">Disqus评论</a></noscript>
+                    <div id="messages-container">
+                        <!-- 留言将通过JavaScript动态加载 -->
+                        <div class="loading-messages">正在加载留言...</div>
+                    </div>
                 </div>
             </section>
 
@@ -86,9 +70,9 @@
                 <h3>联系我们</h3>
                 <p>如果您有任何问题或建议，也可以通过以下方式联系我们：</p>
                 <ul>
-                    <li><i class="fas fa-envelope"></i> 电子邮箱：<a href="mailto:example@example.com">example@example.com</a></li>
-                    <li><i class="fab fa-weixin"></i> 微信：CaydenBlog</li>
-                    <li><i class="fab fa-github"></i> GitHub：<a href="https://github.com/username/cayden-blog" target="_blank">github.com/username/cayden-blog</a></li>
+                    <li><i class="fas fa-envelope"></i> 电子邮箱：<a href="mailto:example@example.com">grand.cayden@gmail.com</a></li>
+                    <li><i class="fab fa-weixin"></i> 微信：flyingpig</li>
+                    
                 </ul>
             </section>
         </div>

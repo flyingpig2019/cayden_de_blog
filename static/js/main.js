@@ -57,6 +57,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 留言板表单提交处理
 const guestbookForm = document.getElementById('guestbook-form');
+const messagesContainer = document.getElementById('messages-container');
+
+// 加载留言数据
+function loadMessages() {
+    if(messagesContainer) {
+        messagesContainer.innerHTML = '<div class="loading-messages">正在加载留言...</div>';
+        
+        fetch('/api/messages')
+            .then(response => response.json())
+            .then(messages => {
+                if(messages.length === 0) {
+                    messagesContainer.innerHTML = '<p class="no-messages">暂无留言，快来留下第一条吧！</p>';
+                    return;
+                }
+                
+                let html = '';
+                messages.forEach(msg => {
+                    const date = new Date(msg.created_at).toLocaleString('zh-CN');
+                    html += `
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">${msg.name}</span>
+                                <span class="comment-date">${date}</span>
+                            </div>
+                            <div class="comment-content">${msg.message}</div>
+                        </div>
+                    `;
+                });
+                
+                messagesContainer.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('获取留言失败:', error);
+                messagesContainer.innerHTML = '<p class="error-message">获取留言失败，请稍后再试。</p>';
+            });
+    }
+}
+
+// 页面加载时获取留言
+if(messagesContainer) {
+    loadMessages();
+}
+
+// 提交留言表单
 if(guestbookForm) {
     guestbookForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -66,17 +110,45 @@ if(guestbookForm) {
         const email = document.getElementById('email').value;
         const message = document.getElementById('message').value;
         
-        // 这里可以添加表单验证逻辑
+        // 简单的表单验证
+        if(!name || !email || !message) {
+            alert('请填写所有必填字段！');
+            return;
+        }
         
-        // 在实际应用中，这里会发送数据到服务器
-        // 但由于我们使用的是静态网站，可以考虑使用GitHub Issues作为评论系统
-        // 或者使用第三方评论服务如Disqus
+        // 禁用提交按钮，防止重复提交
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '提交中...';
         
-        // 显示提交成功消息
-        alert(`谢谢您的留言，${name}！\n\n您的留言已收到，我们会尽快回复。`);
-        
-        // 重置表单
-        this.reset();
+        // 发送数据到服务器
+        fetch('/api/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert(`谢谢您的留言，${name}！\n\n您的留言已成功提交。`);
+                this.reset();
+                // 重新加载留言列表
+                loadMessages();
+            } else {
+                alert('留言提交失败：' + (data.error || '未知错误'));
+            }
+        })
+        .catch(error => {
+            console.error('提交留言失败:', error);
+            alert('提交留言失败，请稍后再试。');
+        })
+        .finally(() => {
+            // 恢复提交按钮
+            submitBtn.disabled = false;
+            submitBtn.textContent = '提交留言';
+        });
     });
 }
 

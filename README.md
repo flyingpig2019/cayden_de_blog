@@ -1,6 +1,6 @@
 # Cayden的成长博客
 
-这是一个基于GitHub Pages的静态个人博客网站，专门用于记录和分享6岁小朋友Cayden的成长历程。网站包含照片墙、视频集、成长故事和留言板等功能。
+这是一个记录和分享6岁小朋友Cayden成长历程的个人博客网站。网站包含照片墙、视频集、成长故事和留言板等功能。
 
 ## 网站功能
 
@@ -8,29 +8,34 @@
 - **照片墙**：按分类展示Cayden的照片，支持筛选和灯箱效果
 - **视频集**：收集和展示Cayden的视频记录
 - **成长故事**：记录Cayden生活中的点滴和成长经历
-- **留言板**：访客可以留言互动，集成Disqus评论系统
+- **留言板**：访客可以留言互动，使用SQLite数据库存储留言
 
 ## 技术栈
 
-- **托管平台**：GitHub Pages
 - **前端技术**：HTML5, CSS3, JavaScript
-- **数据管理**：静态HTML和JSON
-- **评论系统**：Disqus
+- **后端技术**：Python Flask
+- **数据管理**：SQLite数据库
+- **静态资源**：图片、CSS和JavaScript文件
 
-## 如何部署
+## 如何运行
 
-### 部署到GitHub Pages
+### 安装依赖
 
-1. 在GitHub上创建一个新的仓库，命名为`username.github.io`（将`username`替换为你的GitHub用户名）
-2. 将本项目所有文件上传到该仓库
-3. 在仓库设置中启用GitHub Pages功能
-4. 几分钟后，你的网站将可以通过`https://username.github.io`访问
+```bash
+pip install -r requirements.txt
+```
 
-### 自定义域名（可选）
+### 启动服务器
 
-1. 在你的域名提供商处添加一条CNAME记录，指向`username.github.io`
-2. 在GitHub仓库中创建一个名为`CNAME`的文件，内容为你的自定义域名
-3. 在仓库设置的GitHub Pages部分配置自定义域名
+```bash
+python app.py
+```
+
+服务器将在 http://localhost:8000 启动，可以通过浏览器访问。
+
+### 数据库说明
+
+留言板功能使用SQLite数据库存储用户留言，数据保存在`data/guestbook.db`文件中。首次运行时，系统会自动创建数据库和表结构。
 
 ## 如何更新内容
 
@@ -48,24 +53,41 @@
 
 在`stories.html`文件中按照现有格式添加新的故事内容
 
-## 评论系统配置
+## 留言板功能
 
-本网站使用Disqus作为评论系统。要配置Disqus：
+留言板功能使用SQLite数据库存储用户留言。主要特点：
 
-1. 注册Disqus账号并创建一个站点
-2. 获取Disqus的通用代码
-3. 将代码中的`s.src`值中的`cayden-blog`替换为你的Disqus站点名称
+1. 用户可以提交姓名、邮箱和留言内容
+2. 留言会实时显示在页面上
+3. 所有留言按时间倒序排列
+4. 数据安全存储在SQLite数据库中
+
+## 项目结构
+
+- `app.py` - Flask应用主文件
+- `index.html` - 网站首页
+- `photos.html` - 照片墙页面
+- `videos.html` - 视频集页面
+- `stories.html` - 成长故事页面
+- `guestbook.html` - 留言板页面
+- `static/` - 静态资源目录
+  - `css/` - CSS样式文件
+  - `js/` - JavaScript脚本文件
+  - `images/` - 图片资源
+- `data/` - 数据目录（自动创建）
+  - `guestbook.db` - SQLite数据库文件
 
 ## 注意事项
 
 - 所有图片文件应放在`static/images`目录下
 - 为保护隐私，建议不要在公开网站上使用真实照片，可以使用处理过的或示意性图片
-- 定期备份网站内容
+- 定期备份数据库文件`data/guestbook.db`以防数据丢失
+- 默认端口为8000，可以在`app.py`中修改
 
 ## 许可证
 
-本项目采用MIT许可证。详见[LICENSE](LICENSE)文件。
+本项目采用MIT许可证。
 
 ---
 
-祝你使用愉快！如有任何问题，请通过GitHub Issues联系我。
+祝你使用愉快！如有任何问题，请联系我。
