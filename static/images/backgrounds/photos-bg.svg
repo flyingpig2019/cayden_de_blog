@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8f5e9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#81c784;stop-opacity:0.8" />
+    </linearGradient>
+    <pattern id="pattern1" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M0,30 L60,30 M30,0 L30,60" stroke="#a5d6a7" stroke-width="2" stroke-opacity="0.3" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad1)" />
+  <rect width="100%" height="100%" fill="url(#pattern1)" />
+  <g fill="#ffffff" fill-opacity="0.2">
+    <circle cx="200" cy="200" r="50" />
+    <circle cx="400" cy="300" r="30" />
+    <circle cx="600" cy="150" r="40" />
+    <circle cx="800" cy="250" r="35" />
+    <circle cx="1000" cy="180" r="45" />
+    <circle cx="1200" cy="280" r="25" />
+    <circle cx="1400" cy="150" r="40" />
+    <circle cx="1600" cy="220" r="30" />
+    <circle cx="1800" cy="180" r="50" />
+  </g>
+  <path d="M0,1080 C500,980 1000,1030 1500,990 C1700,970 1920,1080 1920,1080 L0,1080 Z" fill="#ffffff" fill-opacity="0.3" />
+</svg>

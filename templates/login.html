@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Admin Login') }} - {{ _('Cayden\'s Growth Blog') }}{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h1>{{ _('Admin Login') }}</h1>
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+            <label for="email">{{ _('Email') }}</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="totp_code">{{ _('Authentication Code') }} ({{ _('Optional') }})</label>
+            <input type="text" id="totp_code" name="totp_code">
+            <small>{{ _('Enter the code from your authenticator app if configured') }}</small>
+        </div>
+        <button type="submit" class="btn btn-primary">{{ _('Login') }}</button>
+    </form>
+</div>
+{% endblock %}

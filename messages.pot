@@ -1,0 +1,327 @@
+# Translations template for Cayden's Growth Blog.
+# Copyright (C) 2023 Cayden
+# This file is distributed under the same license as the Cayden's Growth Blog project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Cayden's Growth Blog 1.0\n"
+"Report-Msgid-Bugs-To: grand.cayden@gmail.com\n"
+"POT-Creation-Date: 2023-09-01 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+# Base template strings
+msgid "Cayden's Growth Blog"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Photos"
+msgstr ""
+
+msgid "Videos"
+msgstr ""
+
+msgid "Growth"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Admin Login"
+msgstr ""
+
+msgid "© 2023 Cayden's Growth Blog. All rights reserved."
+msgstr ""
+
+# Index page strings
+msgid "Welcome to Cayden's Growth Blog"
+msgstr ""
+
+msgid "Latest Updates"
+msgstr ""
+
+msgid "Recent Photos"
+msgstr ""
+
+msgid "Check out the latest photos in our gallery."
+msgstr ""
+
+msgid "View Photos"
+msgstr ""
+
+msgid "Growth Stories"
+msgstr ""
+
+msgid "Follow Cayden's growth journey through our calendar entries."
+msgstr ""
+
+msgid "View Stories"
+msgstr ""
+
+msgid "Video Collection"
+msgstr ""
+
+msgid "Watch videos of Cayden's special moments."
+msgstr ""
+
+msgid "Watch Videos"
+msgstr ""
+
+# Photos page strings
+msgid "Photo Gallery"
+msgstr ""
+
+msgid "Add New Photo"
+msgstr ""
+
+msgid "Select Image"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Upload Photo"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "No photos uploaded yet."
+msgstr ""
+
+# Videos page strings
+msgid "Add New Video"
+msgstr ""
+
+msgid "Embed URL"
+msgstr ""
+
+msgid "YouTube embed URL format: https://www.youtube.com/embed/VIDEO_ID"
+msgstr ""
+
+msgid "Add Video"
+msgstr ""
+
+msgid "No videos added yet."
+msgstr ""
+
+# Growth stories page strings
+msgid "Growth Story"
+msgstr ""
+
+msgid "Story Content"
+msgstr ""
+
+msgid "Image URL"
+msgstr ""
+
+msgid "Optional"
+msgstr ""
+
+msgid "Save Story"
+msgstr ""
+
+msgid "Edit Story"
+msgstr ""
+
+msgid "Delete Story"
+msgstr ""
+
+# Messages page strings
+msgid "Message Board"
+msgstr ""
+
+msgid "Leave a Message"
+msgstr ""
+
+msgid "Your Name"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Submit Message"
+msgstr ""
+
+msgid "Admin Reply:"
+msgstr ""
+
+msgid "Write a reply..."
+msgstr ""
+
+msgid "Reply"
+msgstr ""
+
+msgid "No messages yet. Be the first to leave a message!"
+msgstr ""
+
+# Admin page strings
+msgid "Admin Dashboard"
+msgstr ""
+
+msgid "Content Management"
+msgstr ""
+
+msgid "Select Page"
+msgstr ""
+
+msgid "Home Page"
+msgstr ""
+
+msgid "Go to Page"
+msgstr ""
+
+msgid "Quick Actions"
+msgstr ""
+
+msgid "Manage Photos"
+msgstr ""
+
+msgid "Add and manage video embeds."
+msgstr ""
+
+msgid "Manage Videos"
+msgstr ""
+
+msgid "Add and edit growth stories on the calendar."
+msgstr ""
+
+msgid "Manage Stories"
+msgstr ""
+
+msgid "View and reply to visitor messages."
+msgstr ""
+
+msgid "Manage Messages"
+msgstr ""
+
+msgid "Site Settings"
+msgstr ""
+
+msgid "Default Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Chinese"
+msgstr ""
+
+msgid "Save Settings"
+msgstr ""
+
+# Login page strings
+msgid "Email"
+msgstr ""
+
+msgid "Authentication Code"
+msgstr ""
+
+msgid "Enter the code from your authenticator app if configured"
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+# Flash messages
+msgid "Please log in to access this page"
+msgstr ""
+
+msgid "Invalid email"
+msgstr ""
+
+msgid "Invalid authentication code"
+msgstr ""
+
+msgid "Logged in successfully"
+msgstr ""
+
+msgid "Logged out successfully"
+msgstr ""
+
+msgid "Missing required fields"
+msgstr ""
+
+msgid "Content updated successfully"
+msgstr ""
+
+msgid "No file part"
+msgstr ""
+
+msgid "No selected file"
+msgstr ""
+
+msgid "Photo uploaded successfully"
+msgstr ""
+
+msgid "File type not allowed"
+msgstr ""
+
+msgid "Missing embed URL"
+msgstr ""
+
+msgid "Video added successfully"
+msgstr ""
+
+msgid "Growth story added successfully"
+msgstr ""
+
+msgid "Message added successfully"
+msgstr ""
+
+msgid "Reply added successfully"
+msgstr ""
+
+msgid "Description updated successfully"
+msgstr ""
+
+msgid "Missing photo ID"
+msgstr ""
+
+msgid "Photo not found"
+msgstr ""
+
+msgid "Photo deleted successfully"
+msgstr ""
+
+msgid "Missing video ID"
+msgstr ""
+
+msgid "Video not found"
+msgstr ""
+
+msgid "Video deleted successfully"
+msgstr ""
+
+msgid "Missing date parameter"
+msgstr ""
+
+msgid "No story found for this date"
+msgstr ""
+
+msgid "Missing entry date"
+msgstr ""
+
+msgid "Story not found"
+msgstr ""
+
+msgid "Story deleted successfully"
+msgstr ""

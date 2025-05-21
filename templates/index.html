@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Home') }} - {{ _('Cayden\'s Growth Blog') }}{% endblock %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>{{ _('Welcome to Cayden\'s Growth Blog') }}</h1>
+    
+    <div class="content-editable" {% if session.get('admin_logged_in') %}contenteditable="true" data-page="index"{% endif %}>
+        {{ content|safe }}
+    </div>
+    
+    {% if session.get('admin_logged_in') %}
+    <div class="admin-controls">
+        <button class="save-content" data-page="index">{{ _('Save Changes') }}</button>
+    </div>
+    {% endif %}
+</div>
+
+<div class="latest-updates">
+    <h2>{{ _('Latest Updates') }}</h2>
+    <div class="updates-grid">
+        <div class="update-card">
+            <h3>{{ _('Recent Photos') }}</h3>
+            <p>{{ _('Check out the latest photos in our gallery.') }}</p>
+            <a href="{{ url_for('photos') }}" class="btn">{{ _('View Photos') }}</a>
+        </div>
+        <div class="update-card">
+            <h3>{{ _('Growth Stories') }}</h3>
+            <p>{{ _('Follow Cayden\'s growth journey through our calendar entries.') }}</p>
+            <a href="{{ url_for('growth') }}" class="btn">{{ _('View Stories') }}</a>
+        </div>
+        <div class="update-card">
+            <h3>{{ _('Video Collection') }}</h3>
+            <p>{{ _('Watch videos of Cayden\'s special moments.') }}</p>
+            <a href="{{ url_for('videos') }}" class="btn">{{ _('Watch Videos') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if session.get('admin_logged_in') %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButton = document.querySelector('.save-content');
+        if (saveButton) {
+            saveButton.addEventListener('click', function() {
+                const page = this.dataset.page;
+                const content = document.querySelector('.content-editable[data-page="' + page + '"]').innerHTML;
+                
+                fetch('/api/update_content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        page_name: page,
+                        content: content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('{{ _('Content saved successfully') }}');
+                    } else {
+                        alert('{{ _('Error saving content') }}: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _('An error occurred while saving') }}');
+                });
+            });
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

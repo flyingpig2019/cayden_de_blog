@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('locale', 'en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ _('Cayden\'s Growth Blog') }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/backgrounds.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %} fade-in">
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/backgrounds/logo.png') }}" alt="Logo" class="site-logo float-animation">
+                <a href="{{ url_for('index') }}" class="gradient-text">{{ _('Cayden\'s Growth Blog') }}</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">{{ _('Home') }}</a></li>
+                    <li><a href="{{ url_for('photos') }}">{{ _('Photos') }}</a></li>
+                    <li><a href="{{ url_for('videos') }}">{{ _('Videos') }}</a></li>
+                    <li><a href="{{ url_for('growth') }}">{{ _('Growth') }}</a></li>
+                    <li><a href="{{ url_for('messages') }}">{{ _('Messages') }}</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="language-toggle">
+                    <a href="{{ url_for('set_language', language='en') }}" class="{% if session.get('locale', 'en') == 'en' %}active{% endif %}">ENG</a>
+                    <span>|</span>
+                    <a href="{{ url_for('set_language', language='zh') }}" class="{% if session.get('locale') == 'zh' %}active{% endif %}">CHN</a>
+                </div>
+                <div class="admin-controls">
+                    {% if session.get('admin_logged_in') %}
+                        <a href="{{ url_for('admin') }}">{{ _('Admin') }}</a>
+                        <span>|</span>
+                        <a href="{{ url_for('logout') }}">{{ _('Logout') }}</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}">{{ _('Admin Login') }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container shine-effect">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>{{ _('© 2023 Cayden\'s Growth Blog. All rights reserved.') }}</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% if session.get('admin_logged_in') %}
+        <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

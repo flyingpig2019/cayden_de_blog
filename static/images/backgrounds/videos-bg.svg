@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e3f2fd;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:0.8" />
+    </linearGradient>
+    <pattern id="pattern1" width="70" height="70" patternUnits="userSpaceOnUse">
+      <rect x="10" y="10" width="50" height="50" rx="5" ry="5" fill="#90caf9" fill-opacity="0.2" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad1)" />
+  <rect width="100%" height="100%" fill="url(#pattern1)" />
+  <g fill="#ffffff" fill-opacity="0.15">
+    <rect x="100" y="100" width="100" height="60" rx="10" ry="10" />
+    <rect x="300" y="200" width="120" height="70" rx="10" ry="10" />
+    <rect x="500" y="150" width="90" height="50" rx="10" ry="10" />
+    <rect x="700" y="250" width="110" height="65" rx="10" ry="10" />
+    <rect x="900" y="180" width="100" height="60" rx="10" ry="10" />
+    <rect x="1100" y="220" width="130" height="75" rx="10" ry="10" />
+    <rect x="1300" y="150" width="95" height="55" rx="10" ry="10" />
+    <rect x="1500" y="230" width="115" height="70" rx="10" ry="10" />
+    <rect x="1700" y="170" width="105" height="65" rx="10" ry="10" />
+  </g>
+  <path d="M0,1080 C400,1000 800,1050 1200,980 C1600,950 1920,1080 1920,1080 L0,1080 Z" fill="#ffffff" fill-opacity="0.25" />
+</svg>

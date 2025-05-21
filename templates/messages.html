@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Messages') }} - {{ _('Cayden\'s Growth Blog') }}{% endblock %}
+
+{% block body_class %}messages-page{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <h1>{{ _('Message Board') }}</h1>
+    
+    <div class="message-form-container">
+        <h3>{{ _('Leave a Message') }}</h3>
+        <form id="message-form">
+            <div class="form-group">
+                <label for="user_name">{{ _('Your Name') }}</label>
+                <input type="text" id="user_name" name="user_name" required>
+            </div>
+            <div class="form-group">
+                <label for="message_content">{{ _('Message') }}</label>
+                <textarea id="message_content" name="content" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">{{ _('Submit Message') }}</button>
+        </form>
+    </div>
+    
+    <div class="messages-list">
+        <h3>{{ _('Messages') }}</h3>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="message-card">
+                <div class="message-header">
+                    <span class="message-author">{{ message.user_name }}</span>
+                    <span class="message-date">{{ message.created_at }}</span>
+                </div>
+                <div class="message-body">
+                    {{ message.content }}
+                </div>
+                {% if message.reply %}
+                <div class="message-reply">
+                    <div class="reply-header">{{ _('Admin Reply:') }}</div>
+                    <div class="reply-body">{{ message.reply }}</div>
+                </div>
+                {% endif %}
+                {% if session.get('admin_logged_in') and not message.reply %}
+                <div class="admin-reply-form">
+                    <textarea class="reply-textarea" data-message-id="{{ message.id }}" placeholder="{{ _('Write a reply...') }}"></textarea>
+                    <button class="submit-reply" data-message-id="{{ message.id }}">{{ _('Reply') }}</button>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-content">{{ _('No messages yet. Be the first to leave a message!') }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Message form submission
+        const messageForm = document.getElementById('message-form');
+        if (messageForm) {
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userName = document.getElementById('user_name').value;
+                const content = document.getElementById('message_content').value;
+                
+                fetch('/api/add_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_name: userName,
+                        content: content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('{{ _('Message submitted successfully') }}');
+                        location.reload();
+                    } else {
+                        alert('{{ _('Error submitting message') }}: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _('An error occurred while submitting the message') }}');
+                });
+            });
+        }
+        
+        // Admin reply functionality
+        {% if session.get('admin_logged_in') %}
+        const replyButtons = document.querySelectorAll('.submit-reply');
+        replyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const messageId = this.dataset.messageId;
+                const replyText = document.querySelector(`.reply-textarea[data-message-id="${messageId}"]`).value;
+                
+                if (!replyText.trim()) {
+                    alert('{{ _('Please enter a reply') }}');
+                    return;
+                }
+                
+                fetch('/api/reply_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message_id: messageId,
+                        reply: replyText
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('{{ _('Reply added successfully') }}');
+                        location.reload();
+                    } else {
+                        alert('{{ _('Error adding reply') }}: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _('An error occurred while adding the reply') }}');
+                });
+            });
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Admin Dashboard') }} - {{ _('Cayden\'s Growth Blog') }}{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h1>{{ _('Admin Dashboard') }}</h1>
+    
+    <div class="admin-section">
+        <h2>{{ _('Content Management') }}</h2>
+        
+        <div class="admin-controls">
+            <div class="form-group">
+                <label for="page-select">{{ _('Select Page') }}</label>
+                <select id="page-select">
+                    <option value="index">{{ _('Home Page') }}</option>
+                    <option value="photos">{{ _('Photos') }}</option>
+                    <option value="videos">{{ _('Videos') }}</option>
+                    <option value="growth">{{ _('Growth Stories') }}</option>
+                    <option value="messages">{{ _('Messages') }}</option>
+                </select>
+            </div>
+            
+            <button id="go-to-page" class="btn btn-primary">{{ _('Go to Page') }}</button>
+        </div>
+    </div>
+    
+    <div class="admin-section">
+        <h2>{{ _('Quick Actions') }}</h2>
+        
+        <div class="quick-actions">
+            <div class="action-card">
+                <h3>{{ _('Photos') }}</h3>
+                <p>{{ _('Upload and manage photos in the gallery.') }}</p>
+                <a href="{{ url_for('photos') }}" class="btn">{{ _('Manage Photos') }}</a>
+            </div>
+            
+            <div class="action-card">
+                <h3>{{ _('Videos') }}</h3>
+                <p>{{ _('Add and manage video embeds.') }}</p>
+                <a href="{{ url_for('videos') }}" class="btn">{{ _('Manage Videos') }}</a>
+            </div>
+            
+            <div class="action-card">
+                <h3>{{ _('Growth Stories') }}</h3>
+                <p>{{ _('Add and edit growth stories on the calendar.') }}</p>
+                <a href="{{ url_for('growth') }}" class="btn">{{ _('Manage Stories') }}</a>
+            </div>
+            
+            <div class="action-card">
+                <h3>{{ _('Messages') }}</h3>
+                <p>{{ _('View and reply to visitor messages.') }}</p>
+                <a href="{{ url_for('messages') }}" class="btn">{{ _('Manage Messages') }}</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="admin-section">
+        <h2>{{ _('Site Settings') }}</h2>
+        
+        <div class="site-settings">
+            <div class="form-group">
+                <label for="site-language">{{ _('Default Language') }}</label>
+                <select id="site-language">
+                    <option value="en" {% if session.get('locale', 'en') == 'en' %}selected{% endif %}>{{ _('English') }}</option>
+                    <option value="zh" {% if session.get('locale') == 'zh' %}selected{% endif %}>{{ _('Chinese') }}</option>
+                </select>
+            </div>
+            
+            <button id="save-settings" class="btn btn-primary">{{ _('Save Settings') }}</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Go to page button
+        const goToPageBtn = document.getElementById('go-to-page');
+        if (goToPageBtn) {
+            goToPageBtn.addEventListener('click', function() {
+                const selectedPage = document.getElementById('page-select').value;
+                window.location.href = `/${selectedPage}`;
+            });
+        }
+        
+        // Save settings button
+        const saveSettingsBtn = document.getElementById('save-settings');
+        if (saveSettingsBtn) {
+            saveSettingsBtn.addEventListener('click', function() {
+                const selectedLanguage = document.getElementById('site-language').value;
+                window.location.href = `/set_language/${selectedLanguage}`;
+            });
+        }
+    });
+</script>
+{% endblock %}

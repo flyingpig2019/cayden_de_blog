@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Growth Stories') }} - {{ _('Cayden\'s Growth Blog') }}{% endblock %}
+
+{% block body_class %}growth-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="growth-container">
+    <h1>{{ _('Growth Stories') }}</h1>
+    
+    <div class="growth-layout">
+        <div class="growth-sidebar">
+            <div class="growth-calendar-container">
+                <div id="calendar"></div>
+                <div class="search-container">
+                    <input type="text" id="story-search" placeholder="{{ _('Search stories...') }}" class="search-input">
+                    <button id="search-button" class="search-button">{{ _('Search') }}</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="growth-stories">
+            <div class="stories-grid">
+                {% for story in stories %}
+                <div class="story-card" data-date="{{ story.entry_date }}">
+                    <div class="story-card-title">{{ _('Story') }} #{{ loop.index }}</div>
+                    <div class="story-card-date">{{ story.entry_date }}</div>
+                    <div class="story-card-content">{{ story.content|truncate(150) }}</div>
+                    {% if story.image %}
+                    <div class="story-card-image">
+                        <img src="{{ story.image }}" alt="{{ _('Story image') }}">
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div id="story-modal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">{{ _('Growth Story') }}</h2>
+            <div id="story-view" class="story-view">
+                <div id="story-date" class="story-date"></div>
+                <div id="story-content" class="story-content"></div>
+                <div id="story-image" class="story-image"></div>
+                {% if session.get('admin_logged_in') %}
+                <div class="admin-controls view-controls">
+                    <button id="edit-story" class="btn">{{ _('Edit Story') }}</button>
+                    <button id="delete-story" class="btn btn-danger">{{ _('Delete Story') }}</button>
+                </div>
+                {% endif %}
+            </div>
+            {% if session.get('admin_logged_in') %}
+            <div id="story-edit" class="story-edit">
+                <form id="story-form">
+                    <input type="hidden" id="entry-date" name="entry_date">
+                    <div class="form-group">
+                        <label for="content">{{ _('Story Content') }}</label>
+                        <textarea id="content" name="content" rows="8" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">{{ _('Image URL') }} ({{ _('Optional') }})</label>
+                        <input type="text" id="image" name="image">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">{{ _('Save Story') }}</button>
+                        <button type="button" id="cancel-edit" class="btn">{{ _('Cancel') }}</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize calendar
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth'
+            },
+            height: 'auto',
+            events: '/api/growth_stories',
+            eventClick: function(info) {
+                openStoryModal(info.event.startStr);
+            },
+            dateClick: function(info) {
+                {% if session.get('admin_logged_in') %}
+                openNewStoryModal(info.dateStr);
+                {% else %}
+                openStoryModal(info.dateStr);
+                {% endif %}
+            },
+            // 优化日历样式
+            buttonText: {
+                today: '{{ _('Today') }}'
+            },
+            buttonIcons: {
+                prev: 'chevron-left',
+                next: 'chevron-right'
+            },
+            // 减小按钮尺寸
+            customButtons: {
+                prev: {
+                    text: '<',
+                    click: function() {
+                        calendar.prev();
+                    }
+                },
+                next: {
+                    text: '>',
+                    click: function() {
+                        calendar.next();
+                    }
+                }
+            }
+        });
+        calendar.render();
+        
+        // 添加故事卡片点击事件
+        const storyCards = document.querySelectorAll('.story-card');
+        storyCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-date');
+                openStoryModal(dateStr);
+            });
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('story-modal');
+        const closeBtn = document.querySelector('.close');
+        const storyView = document.getElementById('story-view');
+        const storyEdit = document.getElementById('story-edit');
+        const editBtn = document.getElementById('edit-story');
+        const deleteBtn = document.getElementById('delete-story');
+        const storyForm = document.getElementById('story-form');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const searchInput = document.getElementById('story-search');
+        const searchButton = document.getElementById('search-button');
+        
+        let currentStoryId = null;
+        
+        function openStoryModal(dateStr) {
+            fetch(`/api/growth_story?date=${dateStr}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const story = data.story;
+                        currentStoryId = story.id;
+                        
+                        document.getElementById('story-date').textContent = dateStr;
+                        document.getElementById('story-content').innerHTML = story.content;
+                        
+                        const storyImage = document.getElementById('story-image');
+                        if (story.image) {
+                            storyImage.innerHTML = `<img src="${story.image}" alt="Story Image">`;
+                            storyImage.style.display = 'block';
+                        } else {
+                            storyImage.style.display = 'none';
+                        }
+                        
+                        storyView.style.display = 'block';
+                        storyEdit.style.display = 'none';
+                        
+                        {% if session.get('admin_logged_in') %}
+                        editBtn.style.display = 'inline-block';
+                        deleteBtn.style.display = 'inline-block';
+                        
+                        // Populate form for editing
+                        document.getElementById('entry-date').value = dateStr;
+                        document.getElementById('content').value = story.content;
+                        document.getElementById('image').value = story.image || '';
+                        {% endif %}
+                        
+                        modal.style.display = 'block';
+                    } else {
+                        {% if session.get('admin_logged_in') %}
+                        openNewStoryModal(dateStr);
+                        {% else %}
+                        // 对于非管理员用户，显示一个友好的消息，表明该日期没有故事
+                        document.getElementById('modal-title').textContent = '{{ _('No Story Available') }}';
+                        document.getElementById('story-date').textContent = dateStr;
+                        document.getElementById('story-content').innerHTML = '<p>{{ _('There is no growth story for this date yet.') }}</p>';
+                        document.getElementById('story-image').style.display = 'none';
+                        
+                        storyView.style.display = 'block';
+                        storyEdit.style.display = 'none';
+                        
+                        modal.style.display = 'block';
+                        {% endif %}
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // 改进错误处理，显示更友好的错误信息并在模态框中展示
+                    document.getElementById('modal-title').textContent = '{{ _('Error') }}';
+                    document.getElementById('story-date').textContent = dateStr;
+                    document.getElementById('story-content').innerHTML = '<p>{{ _('Unable to load the story for this date. Please try again later.') }}</p>';
+                    document.getElementById('story-image').style.display = 'none';
+                    
+                    storyView.style.display = 'block';
+                    storyEdit.style.display = 'none';
+                    
+                    modal.style.display = 'block';
+                });
+        }
+        
+        function openNewStoryModal(dateStr) {
+            {% if session.get('admin_logged_in') %}
+            document.getElementById('modal-title').textContent = '{{ _('Add New Growth Story') }}';
+            document.getElementById('entry-date').value = dateStr;
+            document.getElementById('content').value = '';
+            document.getElementById('image').value = '';
+            
+            storyView.style.display = 'none';
+            storyEdit.style.display = 'block';
+            editBtn.style.display = 'none';
+            deleteBtn.style.display = 'none';
+            
+            modal.style.display = 'block';
+            {% endif %}
+        }
+        
+        // Close modal when clicking the close button
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        {% if session.get('admin_logged_in') %}
+        // Edit button functionality
+        if (editBtn) {
+            editBtn.onclick = function() {
+                storyView.style.display = 'none';
+                storyEdit.style.display = 'block';
+            }
+        }
+        
+        // Cancel edit button functionality
+        if (cancelEditBtn) {
+            cancelEditBtn.onclick = function(e) {
+                e.preventDefault();
+                storyEdit.style.display = 'none';
+                storyView.style.display = 'block';
+            }
+        }
+        
+        // Delete button functionality
+        if (deleteBtn) {
+            deleteBtn.onclick = function() {
+                if (confirm('{{ _('Are you sure you want to delete this story?') }}')) {
+                    const dateStr = document.getElementById('entry-date').value;
+                    
+                    fetch('/api/delete_growth_story', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            entry_date: dateStr
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('{{ _('Story deleted successfully') }}');
+                            modal.style.display = 'none';
+                            calendar.refetchEvents();
+                        } else {
+                            alert('{{ _('Error deleting story') }}: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('{{ _('An error occurred while deleting') }}');
+                    });
+                }
+            }
+        }
+        
+        // Form submission
+        if (storyForm) {
+            storyForm.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const entryDate = document.getElementById('entry-date').value;
+                const content = document.getElementById('content').value;
+                const image = document.getElementById('image').value;
+                
+                fetch('/api/add_growth_story', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        entry_date: entryDate,
+                        content: content,
+                        image: image
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('{{ _('Story saved successfully') }}');
+                        modal.style.display = 'none';
+                        calendar.refetchEvents();
+                    } else {
+                        alert('{{ _('Error saving story') }}: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _('An error occurred while saving') }}');
+                });
+            }
+        }
+        {% endif %}
+        
+        // Search functionality
+        if (searchButton && searchInput) {
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm.length < 2) {
+                alert('{{ _('Please enter at least 2 characters to search') }}');
+                return;
+            }
+            
+            fetch(`/api/search_growth_stories?q=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.stories.length > 0) {
+                        // 清空当前故事网格
+                        const storiesGrid = document.querySelector('.stories-grid');
+                        storiesGrid.innerHTML = '';
+                        
+                        // 添加搜索结果
+                        data.stories.forEach(story => {
+                            const storyCard = document.createElement('div');
+                            storyCard.className = 'story-card';
+                            storyCard.setAttribute('data-date', story.entry_date);
+                            
+                            storyCard.innerHTML = `
+                                <div class="story-card-title">{{ _('Story') }}</div>
+                                <div class="story-card-date">${story.entry_date}</div>
+                                <div class="story-card-content">${story.content.substring(0, 150)}${story.content.length > 150 ? '...' : ''}</div>
+                                ${story.image ? `<div class="story-card-image"><img src="${story.image}" alt="{{ _('Story image') }}"></div>` : ''}
+                            `;
+                            
+                            storyCard.addEventListener('click', function() {
+                                openStoryModal(story.entry_date);
+                            });
+                            
+                            storiesGrid.appendChild(storyCard);
+                        });
+                    } else {
+                        alert('{{ _('No stories found matching your search') }}');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _('An error occurred while searching') }}');
+                });
+        }
+    });
+</script>
+{% endblock %}

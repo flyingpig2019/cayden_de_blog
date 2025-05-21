@@ -1,0 +1,327 @@
+# Chinese translations for Cayden's Growth Blog.
+# Copyright (C) 2023 Cayden
+# This file is distributed under the same license as the Cayden's Growth Blog project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Cayden's Growth Blog 1.0\n"
+"Report-Msgid-Bugs-To: grand.cayden@gmail.com\n"
+"POT-Creation-Date: 2023-09-01 12:00+0000\n"
+"PO-Revision-Date: 2023-09-01 12:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+# Base template strings
+msgid "Cayden's Growth Blog"
+msgstr "凯登的成长博客"
+
+msgid "Home"
+msgstr "首页"
+
+msgid "Photos"
+msgstr "照片"
+
+msgid "Videos"
+msgstr "视频"
+
+msgid "Growth"
+msgstr "成长"
+
+msgid "Messages"
+msgstr "留言"
+
+msgid "Admin"
+msgstr "管理员"
+
+msgid "Logout"
+msgstr "退出登录"
+
+msgid "Admin Login"
+msgstr "管理员登录"
+
+msgid "© 2023 Cayden's Growth Blog. All rights reserved."
+msgstr "© 2023 凯登的成长博客。保留所有权利。"
+
+# Index page strings
+msgid "Welcome to Cayden's Growth Blog"
+msgstr "欢迎来到凯登的成长博客"
+
+msgid "Latest Updates"
+msgstr "最新更新"
+
+msgid "Recent Photos"
+msgstr "最新照片"
+
+msgid "Check out the latest photos in our gallery."
+msgstr "查看我们画廊中的最新照片。"
+
+msgid "View Photos"
+msgstr "查看照片"
+
+msgid "Growth Stories"
+msgstr "成长故事"
+
+msgid "Follow Cayden's growth journey through our calendar entries."
+msgstr "通过我们的日历条目关注凯登的成长历程。"
+
+msgid "View Stories"
+msgstr "查看故事"
+
+msgid "Video Collection"
+msgstr "视频集合"
+
+msgid "Watch videos of Cayden's special moments."
+msgstr "观看凯登特别时刻的视频。"
+
+msgid "Watch Videos"
+msgstr "观看视频"
+
+# Photos page strings
+msgid "Photo Gallery"
+msgstr "照片画廊"
+
+msgid "Add New Photo"
+msgstr "添加新照片"
+
+msgid "Select Image"
+msgstr "选择图片"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Upload Photo"
+msgstr "上传照片"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "No photos uploaded yet."
+msgstr "尚未上传照片。"
+
+# Videos page strings
+msgid "Add New Video"
+msgstr "添加新视频"
+
+msgid "Embed URL"
+msgstr "嵌入URL"
+
+msgid "YouTube URL formats: https://www.youtube.com/embed/VIDEO_ID, https://youtu.be/VIDEO_ID or https://www.youtube.com/watch?v=VIDEO_ID"
+msgstr "YouTube链接格式：https://www.youtube.com/embed/视频ID、https://youtu.be/视频ID 或 https://www.youtube.com/watch?v=视频ID"
+
+msgid "Add Video"
+msgstr "添加视频"
+
+msgid "No videos added yet."
+msgstr "尚未添加视频。"
+
+# Growth stories page strings
+msgid "Growth Story"
+msgstr "成长故事"
+
+msgid "Story Content"
+msgstr "故事内容"
+
+msgid "Image URL"
+msgstr "图片URL"
+
+msgid "Optional"
+msgstr "可选"
+
+msgid "Save Story"
+msgstr "保存故事"
+
+msgid "Edit Story"
+msgstr "编辑故事"
+
+msgid "Delete Story"
+msgstr "删除故事"
+
+# Messages page strings
+msgid "Message Board"
+msgstr "留言板"
+
+msgid "Leave a Message"
+msgstr "留言"
+
+msgid "Your Name"
+msgstr "您的姓名"
+
+msgid "Message"
+msgstr "留言"
+
+msgid "Submit Message"
+msgstr "提交留言"
+
+msgid "Admin Reply:"
+msgstr "管理员回复："
+
+msgid "Write a reply..."
+msgstr "写回复..."
+
+msgid "Reply"
+msgstr "回复"
+
+msgid "No messages yet. Be the first to leave a message!"
+msgstr "尚无留言。成为第一个留言的人！"
+
+# Admin page strings
+msgid "Admin Dashboard"
+msgstr "管理员仪表板"
+
+msgid "Content Management"
+msgstr "内容管理"
+
+msgid "Select Page"
+msgstr "选择页面"
+
+msgid "Home Page"
+msgstr "首页"
+
+msgid "Go to Page"
+msgstr "前往页面"
+
+msgid "Quick Actions"
+msgstr "快速操作"
+
+msgid "Manage Photos"
+msgstr "管理照片"
+
+msgid "Add and manage video embeds."
+msgstr "添加和管理视频嵌入。"
+
+msgid "Manage Videos"
+msgstr "管理视频"
+
+msgid "Add and edit growth stories on the calendar."
+msgstr "在日历上添加和编辑成长故事。"
+
+msgid "Manage Stories"
+msgstr "管理故事"
+
+msgid "View and reply to visitor messages."
+msgstr "查看并回复访客留言。"
+
+msgid "Manage Messages"
+msgstr "管理留言"
+
+msgid "Site Settings"
+msgstr "网站设置"
+
+msgid "Default Language"
+msgstr "默认语言"
+
+msgid "English"
+msgstr "英语"
+
+msgid "Chinese"
+msgstr "中文"
+
+msgid "Save Settings"
+msgstr "保存设置"
+
+# Login page strings
+msgid "Email"
+msgstr "电子邮件"
+
+msgid "Authentication Code"
+msgstr "认证码"
+
+msgid "Enter the code from your authenticator app if configured"
+msgstr "如果已配置，请输入您的认证应用中的代码"
+
+msgid "Login"
+msgstr "登录"
+
+# Flash messages
+msgid "Please log in to access this page"
+msgstr "请登录以访问此页面"
+
+msgid "Invalid email"
+msgstr "无效的电子邮件"
+
+msgid "Invalid authentication code"
+msgstr "无效的认证码"
+
+msgid "Logged in successfully"
+msgstr "登录成功"
+
+msgid "Logged out successfully"
+msgstr "退出登录成功"
+
+msgid "Missing required fields"
+msgstr "缺少必填字段"
+
+msgid "Content updated successfully"
+msgstr "内容更新成功"
+
+msgid "No file part"
+msgstr "没有文件部分"
+
+msgid "No selected file"
+msgstr "未选择文件"
+
+msgid "Photo uploaded successfully"
+msgstr "照片上传成功"
+
+msgid "File type not allowed"
+msgstr "不允许的文件类型"
+
+msgid "Missing embed URL"
+msgstr "缺少嵌入URL"
+
+msgid "Video added successfully"
+msgstr "视频添加成功"
+
+msgid "Growth story added successfully"
+msgstr "成长故事添加成功"
+
+msgid "Message added successfully"
+msgstr "留言添加成功"
+
+msgid "Reply added successfully"
+msgstr "回复添加成功"
+
+msgid "Description updated successfully"
+msgstr "描述更新成功"
+
+msgid "Missing photo ID"
+msgstr "缺少照片ID"
+
+msgid "Photo not found"
+msgstr "未找到照片"
+
+msgid "Photo deleted successfully"
+msgstr "照片删除成功"
+
+msgid "Missing video ID"
+msgstr "缺少视频ID"
+
+msgid "Video not found"
+msgstr "未找到视频"
+
+msgid "Video deleted successfully"
+msgstr "视频删除成功"
+
+msgid "Missing date parameter"
+msgstr "缺少日期参数"
+
+msgid "No story found for this date"
+msgstr "未找到此日期的故事"
+
+msgid "Missing entry date"
+msgstr "缺少条目日期"
+
+msgid "Story not found"
+msgstr "未找到故事"
+
+msgid "Story deleted successfully"
+msgstr "故事删除成功"
