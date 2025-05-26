@@ -152,7 +152,8 @@ def main():
     
     # 启动Flask应用程序
     print("正在启动Flask应用程序...")
-    print("您可以在浏览器中访问: http://127.0.0.1:5000")
+    port = int(os.environ.get("PORT", 5000))
+    print(f"您可以在浏览器中访问: http://127.0.0.1:{port}")
     os.environ["FLASK_APP"] = "app.py"
     os.environ["PYTHONUNBUFFERED"] = "1"  # 确保Python输出不被缓冲
     
@@ -160,7 +161,7 @@ def main():
     try:
         # 直接启动Flask应用，并将输出重定向到标准输出和标准错误
         process = subprocess.Popen(
-            [sys.executable, "-m", "flask", "run"],
+            [sys.executable, "-m", "flask", "run", "--host=0.0.0.0", f"--port={port}"],
             stdout=sys.stdout,
             stderr=sys.stderr
         )
