@@ -241,6 +241,24 @@ def add_growth_story():
     
     return jsonify({'success': True, 'message': _('Growth story added successfully')})
 
+@app.route('/api/public_add_message', methods=['POST'])
+def public_add_message():
+    data = request.json
+    user_name = data.get('user_name')
+    content = data.get('content')
+    
+    if not user_name or not content:
+        return jsonify({'success': False, 'message': _('Missing required fields')})
+    
+    db = get_db()
+    db.execute(
+        'INSERT INTO message (user_name, content, created_at) VALUES (?, ?, ?)',
+        (user_name, content, datetime.datetime.now())
+    )
+    db.commit()
+    
+    return jsonify({'success': True, 'message': _('Message added successfully')})
+
 @app.route('/api/add_message', methods=['POST'])
 @login_required
 def add_message():
