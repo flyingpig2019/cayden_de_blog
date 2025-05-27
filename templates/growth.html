@@ -11,6 +11,7 @@
 {% block content %}
 <div class="growth-container">
     <h1>{{ _('Growth Stories') }}</h1>
+    <p class="info-text">{{ _('Click on a story card or calendar date to view the full story details in a popup window.') }}</p>
     
     <div class="growth-layout">
         <div class="growth-sidebar">
@@ -94,7 +95,7 @@
                 right: 'dayGridMonth'
             },
             height: 'auto',
-            events: '/api/growth_stories',
+            events: `/api/growth_stories?_=${new Date().getTime()}`,
             eventClick: function(info) {
                 openStoryModal(info.event.startStr);
             },
@@ -155,7 +156,9 @@
         let currentStoryId = null;
         
         function openStoryModal(dateStr) {
-            fetch(`/api/growth_story?date=${dateStr}`)
+            // Add a timestamp parameter to prevent caching
+            const timestamp = new Date().getTime();
+            fetch(`/api/growth_story?date=${dateStr}&_=${timestamp}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -187,6 +190,10 @@
                         {% endif %}
                         
                         modal.style.display = 'block';
+                        // Force browser to refresh content display
+                        setTimeout(() => {
+                            window.dispatchEvent(new Event('resize'));
+                        }, 100);
                     } else {
                         {% if session.get('admin_logged_in') %}
                         openNewStoryModal(dateStr);
@@ -355,7 +362,9 @@
                 return;
             }
             
-            fetch(`/api/search_growth_stories?q=${encodeURIComponent(searchTerm)}`)
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            fetch(`/api/search_growth_stories?q=${encodeURIComponent(searchTerm)}&_=${timestamp}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.stories.length > 0) {

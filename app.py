@@ -2,7 +2,7 @@ import os
 import sqlite3
 import datetime
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g, jsonify, make_response, send_from_directory
 from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
@@ -14,13 +14,27 @@ load_dotenv()
 # App configuration
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/uploads')
+# 修改上传文件夹路径，确保一致性
+upload_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = upload_folder
+print(f"Upload folder configured as: {upload_folder}")
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['DATABASE'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
 app.config['SESSION_DURATION'] = int(os.getenv('SESSION_DURATION', 7))
 
 # Babel configuration for multilingual support
 babel = Babel(app)
+
+# Custom template filter for datetime formatting
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%Y-%m-%d'):
+    if isinstance(value, str):
+        try:
+            dt = datetime.datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            return dt.strftime(format)
+        except ValueError:
+            return value
+    return value
 
 @babel.localeselector
 def get_locale():
@@ -73,31 +87,56 @@ def index():
     content = db.execute('SELECT content FROM page_content WHERE page_name = ?', ('index',)).fetchone()
     if content is None:
         content = {'content': _('Welcome to Cayden\'s Growth Blog!')}
-    return render_template('index.html', content=content['content'])
+    # Add cache control headers to prevent browser caching
+    response = make_response(render_template('index.html', content=content['content']))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/photos')
 def photos():
     db = get_db()
-    photos = db.execute('SELECT * FROM photo ORDER BY uploaded_at DESC').fetchall()
-    return render_template('photos.html', photos=photos)
+    photos = db.execute('SELECT *, datetime(uploaded_at) as uploaded_at FROM photo ORDER BY uploaded_at DESC').fetchall()
+    # Add cache control headers to prevent browser caching
+    response = make_response(render_template('photos.html', photos=photos))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/videos')
 def videos():
     db = get_db()
     videos = db.execute('SELECT * FROM video ORDER BY uploaded_at DESC').fetchall()
-    return render_template('videos.html', videos=videos)
+    # Add cache control headers to prevent browser caching
+    response = make_response(render_template('videos.html', videos=videos))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/growth')
 def growth():
     db = get_db()
     stories = db.execute('SELECT * FROM growth_story ORDER BY entry_date DESC').fetchall()
-    return render_template('growth.html', stories=stories)
+    # Add cache control headers to prevent browser caching
+    response = make_response(render_template('growth.html', stories=stories))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/messages')
 def messages():
     db = get_db()
     messages = db.execute('SELECT * FROM message ORDER BY created_at DESC').fetchall()
-    return render_template('messages.html', messages=messages)
+    # Add cache control headers to prevent browser caching
+    response = make_response(render_template('messages.html', messages=messages))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/admin')
 @login_required
@@ -402,7 +441,13 @@ def get_growth_stories():
             'allDay': True
         })
     
-    return jsonify(events)
+    response = jsonify(events)
+    
+    # Add cache control headers
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/api/search_growth_stories')
 def search_growth_stories():
@@ -425,7 +470,13 @@ def search_growth_stories():
             'image': story['image']
         })
     
-    return jsonify({'success': True, 'stories': result})
+    response = jsonify({'success': True, 'stories': result})
+    
+    # Add cache control headers
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/api/growth_story')
 def get_growth_story():
@@ -439,7 +490,7 @@ def get_growth_story():
     if not story:
         return jsonify({'success': False, 'message': _('No story found for this date')})
     
-    return jsonify({
+    response = jsonify({
         'success': True,
         'story': {
             'id': story['id'],
@@ -448,6 +499,12 @@ def get_growth_story():
             'image': story['image']
         }
     })
+    
+    # Add cache control headers
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/api/delete_growth_story', methods=['POST'])
 @login_required
@@ -470,6 +527,22 @@ def delete_growth_story():
     db.commit()
     
     return jsonify({'success': True, 'message': _('Story deleted successfully')})
+
+# Direct route to serve uploaded files with no-cache headers
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    # 确保上传文件夹存在
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
+    # 打印文件路径以便调试
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    print(f"Serving file: {file_path}, exists: {os.path.exists(file_path)}")
+    
+    response = make_response(send_from_directory(app.config['UPLOAD_FOLDER'], filename))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 if __name__ == '__main__':
     # Ensure upload directory exists

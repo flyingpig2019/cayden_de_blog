@@ -34,7 +34,7 @@
             {% for photo in photos %}
             <div class="photo-card">
                 <div class="photo-image" data-photo-id="{{ photo.id }}">
-                    <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" alt="{{ photo.description }}" data-full-img="{{ url_for('static', filename='uploads/' + photo.filename) }}">
+                    <img src="{{ url_for('uploaded_file', filename=photo.filename) }}?v={{ photo.uploaded_at|datetimeformat('%Y%m%d%H%M%S') }}">
                 </div>
                 <div class="photo-description" {% if session.get('admin_logged_in') %}contenteditable="true" data-photo-id="{{ photo.id }}"{% endif %}>
                     {{ photo.description }}
