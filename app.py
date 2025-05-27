@@ -384,7 +384,12 @@ def delete_photo():
         # Log the error but don't fail the request
         print(f"Error deleting file: {e}")
     
-    return jsonify({'success': True, 'message': _('Photo deleted successfully')})
+    # Create response with strong cache control headers
+    response = jsonify({'success': True, 'message': _('Photo deleted successfully')})
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/api/update_video_description', methods=['POST'])
 @login_required

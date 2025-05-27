@@ -27,7 +27,7 @@
         <div class="growth-stories">
             <div class="stories-grid">
                 {% for story in stories %}
-                <div class="story-card" data-date="{{ story.entry_date }}">
+                <div class="story-card" data-date="{{ story.entry_date }}" onclick="openStoryModal('{{ story.entry_date }}')">
                     <div class="story-card-title">{{ _('Story') }} #{{ loop.index }}</div>
                     <div class="story-card-date">{{ story.entry_date }}</div>
                     <div class="story-card-content">{{ story.content|truncate(150) }}</div>
@@ -42,7 +42,7 @@
         </div>
     </div>
     
-    <div id="story-modal" class="modal">
+    <div id="story-modal" class="modal" style="display: none;">
         <div class="modal-content large-modal">
             <span class="close">&times;</span>
             <h2 id="modal-title">{{ _('Growth Story') }}</h2>
@@ -83,6 +83,7 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize calendar
@@ -134,12 +135,7 @@
         
         // 添加故事卡片点击事件
         const storyCards = document.querySelectorAll('.story-card');
-        storyCards.forEach(card => {
-            card.addEventListener('click', function() {
-                const dateStr = this.getAttribute('data-date');
-                openStoryModal(dateStr);
-            });
-        });
+        console.log('Found story cards:', storyCards.length);
         
         // Modal functionality
         const modal = document.getElementById('story-modal');
@@ -155,130 +151,172 @@
         
         let currentStoryId = null;
         
+        console.log('Modal element exists:', !!modal);
+        console.log('Initial modal display style:', $('#story-modal').css('display'));
+        
+        // 使用jQuery为故事卡片添加点击事件
+        $('.story-card').on('click', function() {
+            const dateStr = $(this).data('date');
+            console.log('Story card clicked with date (jQuery):', dateStr);
+            openStoryModal(dateStr);
+        });
+        
         function openStoryModal(dateStr) {
+            console.log('Opening story modal for date:', dateStr);
+            // 使用jQuery显示模态框
+            $('#story-modal').show();
+            console.log('Modal display style (jQuery):', $('#story-modal').css('display'));
+            
             // Add a timestamp parameter to prevent caching
             const timestamp = new Date().getTime();
-            fetch(`/api/growth_story?date=${dateStr}&_=${timestamp}`)
-                .then(response => response.json())
+            console.log('Using timestamp:', timestamp);
+            // Force browser to clear any cached data
+            fetch(`/api/growth_story?date=${dateStr}&_=${timestamp}`, {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Received data:', data);
                     if (data.success) {
                         const story = data.story;
                         currentStoryId = story.id;
                         
-                        document.getElementById('story-date').textContent = dateStr;
-                        document.getElementById('story-content').innerHTML = story.content;
+                        $('#story-date').text(dateStr);
+                        $('#story-content').html(story.content);
                         
-                        const storyImage = document.getElementById('story-image');
+                        const storyImage = $('#story-image');
                         if (story.image) {
-                            storyImage.innerHTML = `<img src="${story.image}" alt="Story Image">`;
-                            storyImage.style.display = 'block';
+                            storyImage.html(`<img src="${story.image}" alt="Story Image">`);
+                            storyImage.show();
                         } else {
-                            storyImage.style.display = 'none';
+                            storyImage.hide();
                         }
                         
-                        storyView.style.display = 'block';
-                        storyEdit.style.display = 'none';
+                        $('#story-view').show();
+                        $('#story-edit').hide();
                         
                         {% if session.get('admin_logged_in') %}
-                        editBtn.style.display = 'inline-block';
-                        deleteBtn.style.display = 'inline-block';
+                        $('#edit-story').show();
+                        $('#delete-story').show();
                         
                         // Populate form for editing
-                        document.getElementById('entry-date').value = dateStr;
-                        document.getElementById('content').value = story.content;
-                        document.getElementById('image').value = story.image || '';
+                        $('#entry-date').val(dateStr);
+                        $('#content').val(story.content);
+                        $('#image').val(story.image || '');
                         {% endif %}
                         
-                        modal.style.display = 'block';
+                        console.log('Setting modal display to block with jQuery');
+                        // 再次确保模态框可见
+                        $('#story-modal').show();
+                        console.log('Modal display style after setting (jQuery):', $('#story-modal').css('display'));
+                        
                         // Force browser to refresh content display
                         setTimeout(() => {
+                            console.log('Dispatching resize event');
                             window.dispatchEvent(new Event('resize'));
+                            // 第三次确保模态框可见
+                            $('#story-modal').show();
+                            console.log('Modal display style after timeout (jQuery):', $('#story-modal').css('display'));
                         }, 100);
                     } else {
+                        console.log('No story found for date:', dateStr);
                         {% if session.get('admin_logged_in') %}
                         openNewStoryModal(dateStr);
                         {% else %}
                         // 对于非管理员用户，显示一个友好的消息，表明该日期没有故事
-                        document.getElementById('modal-title').textContent = '{{ _('No Story Available') }}';
-                        document.getElementById('story-date').textContent = dateStr;
-                        document.getElementById('story-content').innerHTML = '<p>{{ _('There is no growth story for this date yet.') }}</p>';
-                        document.getElementById('story-image').style.display = 'none';
+                        $('#modal-title').text('{{ _('No Story Available') }}');
+                        $('#story-date').text(dateStr);
+                        $('#story-content').html('<p>{{ _('There is no growth story for this date yet.') }}</p>');
+                        $('#story-image').hide();
                         
-                        storyView.style.display = 'block';
-                        storyEdit.style.display = 'none';
+                        $('#story-view').show();
+                        $('#story-edit').hide();
                         
-                        modal.style.display = 'block';
+                        console.log('Setting modal display to block (no story) with jQuery');
+                        $('#story-modal').show();
+                        console.log('Modal display style (no story) (jQuery):', $('#story-modal').css('display'));
                         {% endif %}
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     // 改进错误处理，显示更友好的错误信息并在模态框中展示
-                    document.getElementById('modal-title').textContent = '{{ _('Error') }}';
-                    document.getElementById('story-date').textContent = dateStr;
-                    document.getElementById('story-content').innerHTML = '<p>{{ _('Unable to load the story for this date. Please try again later.') }}</p>';
-                    document.getElementById('story-image').style.display = 'none';
+                    $('#modal-title').text('{{ _('Error') }}');
+                    $('#story-date').text(dateStr);
+                    $('#story-content').html('<p>{{ _('Unable to load the story for this date. Please try again later.') }}</p>');
+                    $('#story-image').hide();
                     
-                    storyView.style.display = 'block';
-                    storyEdit.style.display = 'none';
+                    $('#story-view').show();
+                    $('#story-edit').hide();
                     
-                    modal.style.display = 'block';
+                    console.log('Setting modal display to block (error) with jQuery');
+                    $('#story-modal').show();
+                    console.log('Modal display style (error) (jQuery):', $('#story-modal').css('display'));
                 });
         }
         
         function openNewStoryModal(dateStr) {
             {% if session.get('admin_logged_in') %}
-            document.getElementById('modal-title').textContent = '{{ _('Add New Growth Story') }}';
-            document.getElementById('entry-date').value = dateStr;
-            document.getElementById('content').value = '';
-            document.getElementById('image').value = '';
+            $('#modal-title').text('{{ _('Add New Growth Story') }}');
+            $('#entry-date').val(dateStr);
+            $('#content').val('');
+            $('#image').val('');
             
-            storyView.style.display = 'none';
-            storyEdit.style.display = 'block';
-            editBtn.style.display = 'none';
-            deleteBtn.style.display = 'none';
+            $('#story-view').hide();
+            $('#story-edit').show();
+            $('#edit-story').hide();
+            $('#delete-story').hide();
             
-            modal.style.display = 'block';
+            $('#story-modal').show();
             {% endif %}
         }
         
         // Close modal when clicking the close button
         if (closeBtn) {
-            closeBtn.onclick = function() {
-                modal.style.display = 'none';
-            }
+            $(closeBtn).on('click', function() {
+                console.log('Close button clicked');
+                $('#story-modal').hide();
+            });
         }
         
         // Close modal when clicking outside of it
-        window.onclick = function(event) {
+        $(window).on('click', function(event) {
             if (event.target == modal) {
-                modal.style.display = 'none';
+                console.log('Clicked outside modal');
+                $('#story-modal').hide();
             }
-        }
+        });
         
         {% if session.get('admin_logged_in') %}
         // Edit button functionality
         if (editBtn) {
-            editBtn.onclick = function() {
-                storyView.style.display = 'none';
-                storyEdit.style.display = 'block';
-            }
+            $(editBtn).on('click', function() {
+                $('#story-view').hide();
+                $('#story-edit').show();
+            });
         }
         
         // Cancel edit button functionality
         if (cancelEditBtn) {
-            cancelEditBtn.onclick = function(e) {
+            $(cancelEditBtn).on('click', function(e) {
                 e.preventDefault();
-                storyEdit.style.display = 'none';
-                storyView.style.display = 'block';
-            }
+                $('#story-edit').hide();
+                $('#story-view').show();
+            });
         }
         
         // Delete button functionality
         if (deleteBtn) {
-            deleteBtn.onclick = function() {
+            $(deleteBtn).on('click', function() {
                 if (confirm('{{ _('Are you sure you want to delete this story?') }}')) {
-                    const dateStr = document.getElementById('entry-date').value;
+                    const dateStr = $('#entry-date').val();
                     
                     fetch('/api/delete_growth_story', {
                         method: 'POST',
@@ -293,7 +331,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('{{ _('Story deleted successfully') }}');
-                            modal.style.display = 'none';
+                            $('#story-modal').hide();
                             calendar.refetchEvents();
                         } else {
                             alert('{{ _('Error deleting story') }}: ' + data.message);
@@ -304,17 +342,17 @@
                         alert('{{ _('An error occurred while deleting') }}');
                     });
                 }
-            }
+            });
         }
         
         // Form submission
         if (storyForm) {
-            storyForm.onsubmit = function(e) {
+            $(storyForm).on('submit', function(e) {
                 e.preventDefault();
                 
-                const entryDate = document.getElementById('entry-date').value;
-                const content = document.getElementById('content').value;
-                const image = document.getElementById('image').value;
+                const entryDate = $('#entry-date').val();
+                const content = $('#content').val();
+                const image = $('#image').val();
                 
                 fetch('/api/add_growth_story', {
                     method: 'POST',
@@ -331,7 +369,7 @@
                 .then(data => {
                     if (data.success) {
                         alert('{{ _('Story saved successfully') }}');
-                        modal.style.display = 'none';
+                        $('#story-modal').hide();
                         calendar.refetchEvents();
                     } else {
                         alert('{{ _('Error saving story') }}: ' + data.message);
@@ -341,14 +379,14 @@
                     console.error('Error:', error);
                     alert('{{ _('An error occurred while saving') }}');
                 });
-            }
+            });
         }
         {% endif %}
         
         // Search functionality
         if (searchButton && searchInput) {
-            searchButton.addEventListener('click', performSearch);
-            searchInput.addEventListener('keypress', function(e) {
+            $(searchButton).on('click', performSearch);
+            $(searchInput).on('keypress', function(e) {
                 if (e.key === 'Enter') {
                     performSearch();
                 }
@@ -356,7 +394,7 @@
         }
         
         function performSearch() {
-            const searchTerm = searchInput.value.trim();
+            const searchTerm = $(searchInput).val().trim();
             if (searchTerm.length < 2) {
                 alert('{{ _('Please enter at least 2 characters to search') }}');
                 return;
@@ -369,27 +407,27 @@
                 .then(data => {
                     if (data.success && data.stories.length > 0) {
                         // 清空当前故事网格
-                        const storiesGrid = document.querySelector('.stories-grid');
-                        storiesGrid.innerHTML = '';
+                        $('.stories-grid').empty();
                         
                         // 添加搜索结果
                         data.stories.forEach(story => {
-                            const storyCard = document.createElement('div');
-                            storyCard.className = 'story-card';
-                            storyCard.setAttribute('data-date', story.entry_date);
+                            const storyCard = $('<div>', {
+                                class: 'story-card',
+                                'data-date': story.entry_date
+                            });
                             
-                            storyCard.innerHTML = `
+                            storyCard.html(`
                                 <div class="story-card-title">{{ _('Story') }}</div>
                                 <div class="story-card-date">${story.entry_date}</div>
                                 <div class="story-card-content">${story.content.substring(0, 150)}${story.content.length > 150 ? '...' : ''}</div>
                                 ${story.image ? `<div class="story-card-image"><img src="${story.image}" alt="{{ _('Story image') }}"></div>` : ''}
-                            `;
+                            `);
                             
-                            storyCard.addEventListener('click', function() {
+                            storyCard.on('click', function() {
                                 openStoryModal(story.entry_date);
                             });
                             
-                            storiesGrid.appendChild(storyCard);
+                            $('.stories-grid').append(storyCard);
                         });
                     } else {
                         alert('{{ _('No stories found matching your search') }}');
