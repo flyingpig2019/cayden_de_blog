@@ -78,6 +78,46 @@ header .container {
 nav ul {
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 10px;
+    display: block !important;
+}
+
+nav ul li a, nav ul li button {
+    display: block !important;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Sync GitHub Button */
+.sync-btn {
+    background-color: #ff4500; /* Changed to a bright orange color */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block !important; /* Force display */
+    font-size: 14px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    z-index: 9999; /* Ensure it's on top */
+    position: relative; /* Enable z-index */
+    visibility: visible !important; /* Force visibility */
+    opacity: 1 !important; /* Force opacity */
+}
+
+.sync-btn:hover {
+    background-color: #ff6347; /* Lighter orange on hover */
 }
 
 nav ul li {

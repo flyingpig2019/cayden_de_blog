@@ -11,6 +11,7 @@ A personal blog application built with Flask to document Cayden's growth journey
 - **Message Board**: Allow visitors to leave messages with admin replies
 - **Admin Dashboard**: Secure admin area for content management
 - **Inline Editing**: Edit content directly on the page when logged in as admin
+- **GitHub Sync**: Synchronize local changes back to GitHub repository
 
 ## Project Structure
 

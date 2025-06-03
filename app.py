@@ -7,6 +7,7 @@ from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import pyotp
+from sync_github import sync_to_github
 
 # Load environment variables
 load_dotenv()
@@ -548,6 +549,34 @@ def uploaded_file(filename):
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     return response
+
+# API endpoint for GitHub synchronization
+@app.route('/api/sync_github', methods=['POST'])
+@login_required
+def sync_github():
+    # Check if user is admin
+    is_admin = session.get('admin_logged_in', False)
+    
+    # 从环境变量或请求中获取GitHub凭据
+    username = os.getenv('GITHUB_USERNAME') or request.json.get('username')
+    password = os.getenv('GITHUB_PASSWORD') or request.json.get('password')
+    repo_url = os.getenv('GITHUB_REPO_URL') or request.json.get('repo_url') or 'https://github.com/flyingpig2019/cayden_de_blog.git'
+    
+    if not username or not password:
+        return jsonify({'success': False, 'message': _('Missing GitHub credentials')})
+    
+    # Only perform actual sync if user is admin
+    if is_admin:
+        # 调用同步函数
+        result = sync_to_github(username, password, repo_url)
+        return jsonify(result)
+    else:
+        # For non-admin users, return a message without performing sync
+        return jsonify({
+            'success': True,
+            'message': _('Sync feature is view-only for non-admin users'),
+            'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
 
 if __name__ == '__main__':
     # Ensure upload directory exists

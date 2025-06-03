@@ -6,6 +6,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize inline editing for all content-editable elements
     initInlineEditing();
+    
+    // Initialize GitHub sync button
+    initGitHubSync();
 });
 
 /**
@@ -111,4 +114,85 @@ function showNotification(message, type = 'info') {
             notification.remove();
         }, 500);
     }, 3000);
+}
+
+/**
+ * Initialize GitHub sync button functionality
+ */
+function initGitHubSync() {
+    const syncButton = document.getElementById('sync-github-btn');
+    
+    if (syncButton) {
+        syncButton.addEventListener('click', function() {
+            // Show loading state
+            const originalText = syncButton.textContent;
+            syncButton.textContent = '同步中...';
+            syncButton.disabled = true;
+            syncButton.style.backgroundColor = '#cccccc';
+            
+            // Check if user is admin by looking for admin link in the page
+            const isAdmin = document.querySelector('a[href="/admin"]') !== null;
+            
+            if (!isAdmin) {
+                // For non-admin users, show a notification without performing sync
+                setTimeout(() => {
+                    syncButton.textContent = originalText;
+                    syncButton.disabled = false;
+                    syncButton.style.backgroundColor = '';
+                    showNotification('同步功能仅对管理员可用。非管理员用户无法执行同步操作。', 'info');
+                }, 1000);
+                return;
+            }
+            
+            // Prompt for GitHub credentials if not stored in environment variables
+            let username = prompt('请输入GitHub用户名:', '');
+            let password = prompt('请输入GitHub密码:', '');
+            
+            if (!username || !password) {
+                syncButton.textContent = originalText;
+                syncButton.disabled = false;
+                syncButton.style.backgroundColor = '';
+                showNotification('GitHub凭据不完整，同步取消', 'error');
+                return;
+            }
+            
+            // Send sync request to the server
+            fetch('/api/sync_github', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    repo_url: 'https://github.com/flyingpig2019/cayden_de_blog.git'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                syncButton.textContent = originalText;
+                syncButton.disabled = false;
+                syncButton.style.backgroundColor = '';
+                
+                // Show result notification
+                if (data.success) {
+                    showNotification(data.message, 'success');
+                } else {
+                    showNotification(data.message, 'error');
+                    console.error('Sync error:', data.error);
+                }
+            })
+            .catch(error => {
+                // Reset button state
+                syncButton.textContent = originalText;
+                syncButton.disabled = false;
+                syncButton.style.backgroundColor = '';
+                
+                // Show error notification
+                showNotification('同步过程中发生错误', 'error');
+                console.error('Sync error:', error);
+            });
+        });
+    }
 }
