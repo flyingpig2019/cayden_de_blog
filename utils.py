@@ -41,3 +41,10 @@ def convert_youtube_url(url):
         
     # 无法识别的格式，返回原始URL
     return url
+
+def log_debug(message):
+    import os
+    import datetime
+    log_file_path = os.path.join(os.getcwd(), 'debug_log.txt')
+    with open(log_file_path, 'a') as f:
+        f.write(f"[DEBUG] {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")

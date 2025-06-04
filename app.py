@@ -1,4 +1,5 @@
 import os
+import os
 import sqlite3
 import datetime
 from functools import wraps
@@ -7,7 +8,7 @@ from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import pyotp
-from sync_github import sync_to_github
+from sync_github import GitHubSyncer
 
 # Load environment variables
 load_dotenv()
@@ -558,6 +559,10 @@ def sync_github():
     is_admin = session.get('admin_logged_in', False)
     
     # 从环境变量或请求中获取GitHub凭据
+    import os
+    log_file_path = os.path.join(os.getcwd(), 'debug_log.txt')
+    with open(log_file_path, 'a') as f:
+        f.write(f"[DEBUG] /api/sync_github endpoint hit!\n")
     username = os.getenv('GITHUB_USERNAME') or request.json.get('username')
     password = os.getenv('GITHUB_PASSWORD') or request.json.get('password')
     repo_url = os.getenv('GITHUB_REPO_URL') or request.json.get('repo_url') or 'https://github.com/flyingpig2019/cayden_de_blog.git'
@@ -568,8 +573,15 @@ def sync_github():
     # Only perform actual sync if user is admin
     if is_admin:
         # 调用同步函数
-        result = sync_to_github(username, password, repo_url)
-        print(f"[DEBUG] GitHub Sync Result: {result}") # Add this line to print the result
+        syncer = GitHubSyncer()
+        result = syncer.sync_repo(
+            username=username,
+            password=password,
+            repo_url=repo_url
+        )
+        log_file_path = os.path.join(os.getcwd(), 'debug_log.txt')
+        with open(log_file_path, 'a') as f:
+            f.write(f"[DEBUG] GitHub Sync Result: {result}\n") # Write to file instead of print
         return jsonify(result)
     else:
         # For non-admin users, return a message without performing sync

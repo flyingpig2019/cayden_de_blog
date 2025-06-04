@@ -1,0 +1,6 @@
+[DEBUG] /api/sync_github endpoint hit!
+[ERROR] General Exception: cannot access local variable 'os' where it is not associated with a value
+[DEBUG] GitHub Sync Result: {'success': False, 'message': "Í¬²½Ê§°Ü: cannot access local variable 'os' where it is not associated with a value", 'error': "cannot access local variable 'os' where it is not associated with a value", 'timestamp': '2025-06-04 11:43:45'}
+[DEBUG] /api/sync_github endpoint hit!
+[DEBUG] 2025-06-04 12:39:40 - [DEBUG] /api/sync_github endpoint hit!
+[DEBUG] 2025-06-04 12:39:40 - [DEBUG] Current working directory: D:\PythonSpace\cayden_de_blog

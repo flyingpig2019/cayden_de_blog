@@ -132,6 +132,7 @@ function initGitHubSync() {
             
             // Check if user is admin by looking for admin link in the page
             const isAdmin = document.querySelector('a[href="/admin"]') !== null;
+            console.log('Is Admin:', isAdmin); // Add this line for debugging
             
             if (!isAdmin) {
                 // For non-admin users, show a notification without performing sync
