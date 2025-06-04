@@ -144,28 +144,18 @@ function initGitHubSync() {
                 return;
             }
             
-            // Prompt for GitHub credentials if not stored in environment variables
-            let username = prompt('请输入GitHub用户名:', '');
-            let password = prompt('请输入GitHub密码:', '');
-            
-            if (!username || !password) {
-                syncButton.textContent = originalText;
-                syncButton.disabled = false;
-                syncButton.style.backgroundColor = '';
-                showNotification('GitHub凭据不完整，同步取消', 'error');
-                return;
-            }
-            
-            // Send sync request to the server
+            // Send sync request to the server without prompting for credentials
+            // The server will use credentials from environment variables
             fetch('/api/sync_github', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    repo_url: 'https://github.com/flyingpig2019/cayden_de_blog.git'
+                    // Send empty values to let server use environment variables
+                    username: '',
+                    password: '',
+                    repo_url: ''
                 })
             })
             .then(response => response.json())
