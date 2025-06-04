@@ -21,8 +21,7 @@ def sync_to_github(username, password, repo_url):
         # 获取当前工作目录
         current_dir = os.getcwd()
         
-        # 构建带有凭据的远程URL
-        remote_url = repo_url.replace('https://', f'https://{username}:{password}@')
+
         
         # 检查是否已经初始化了Git仓库
         if not os.path.exists(os.path.join(current_dir, '.git')):
@@ -30,7 +29,7 @@ def sync_to_github(username, password, repo_url):
             repo = Repo.init(current_dir)
             
             # 配置远程仓库URL
-            origin = repo.create_remote('origin', remote_url)
+            origin = repo.create_remote('origin', repo_url)
         else:
             # 打开现有仓库
             repo = Repo(current_dir)
@@ -39,10 +38,10 @@ def sync_to_github(username, password, repo_url):
             try:
                 origin = repo.remote('origin')
                 # 更新远程URL
-                repo.git.remote('set-url', 'origin', remote_url)
+                repo.git.remote('set-url', 'origin', repo_url)
             except ValueError:
                 # 如果没有origin远程，创建一个
-                origin = repo.create_remote('origin', remote_url)
+                origin = repo.create_remote('origin', repo_url)
         
         # 配置Git用户信息（如果尚未配置）
         if not repo.config_reader().has_section('user'):
