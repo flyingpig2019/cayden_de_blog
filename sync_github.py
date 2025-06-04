@@ -52,9 +52,14 @@ def sync_to_github(username, password, repo_url):
         repo.git.add(A=True)
         
         # 检查是否有要提交的更改
-        if repo.is_dirty() or len(repo.untracked_files) > 0:
+        is_dirty = repo.is_dirty()
+        untracked_files_count = len(repo.untracked_files)
+        print(f"[DEBUG] Repo dirty: {is_dirty}, Untracked files count: {untracked_files_count}")
+
+        if is_dirty or untracked_files_count > 0:
             # 提交更改
             commit_message = f'Auto sync at {time.strftime("%Y-%m-%d %H:%M:%S")}'
+            print(f"[DEBUG] Committing with message: {commit_message}")
             repo.git.commit('-m', commit_message)
             
             # 确定当前分支名称
@@ -82,17 +87,20 @@ def sync_to_github(username, password, repo_url):
                 print(f"Warning: Git pull failed: {pull_e}")
 
             # 推送到GitHub
+            print(f"[DEBUG] Pushing to origin/{branch_name}")
             push_info = origin.push(branch_name)
             
             # 检查推送结果
             for info in push_info:
+                print(f"[DEBUG] Push info: {info.summary}, Flags: {info.flags}")
                 if info.flags & info.ERROR:
-                    return {
-                        'success': False,
-                        'message': f'推送失败: {info.summary}',
-                        'error': info.summary,
-                        'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
-                    }
+                    print(f"[ERROR] Push failed: {info.summary}")
+                return {
+                    'success': False,
+                    'message': f'推送失败: {info.summary}',
+                    'error': info.summary,
+                    'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
+                }
             
             return {
                 'success': True,
@@ -130,6 +138,7 @@ def sync_to_github(username, password, repo_url):
                     'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
                 }
         
+        print(f"[ERROR] GitCommandError: {error_msg}")
         return {
             'success': False,
             'message': f'同步失败: {error_msg}',
@@ -137,6 +146,7 @@ def sync_to_github(username, password, repo_url):
             'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
         }
     except Exception as e:
+        print(f"[ERROR] General Exception: {str(e)}")
         return {
             'success': False,
             'message': f'同步失败: {str(e)}',

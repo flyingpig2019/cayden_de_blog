@@ -569,6 +569,7 @@ def sync_github():
     if is_admin:
         # 调用同步函数
         result = sync_to_github(username, password, repo_url)
+        print(f"[DEBUG] GitHub Sync Result: {result}") # Add this line to print the result
         return jsonify(result)
     else:
         # For non-admin users, return a message without performing sync
