@@ -64,7 +64,24 @@ def sync_to_github(username, password, repo_url):
             except TypeError:
                 # 如果没有活动分支，默认使用main
                 branch_name = 'main'
+
+            # 检查并创建或切换到main分支
+            if branch_name != 'main':
+                try:
+                    repo.git.checkout('main')
+                    branch_name = 'main'
+                except GitCommandError:
+                    # 如果main分支不存在，则创建它
+                    repo.git.checkout('-b', 'main')
+                    branch_name = 'main'
             
+            # 确保本地分支与远程同步
+            try:
+                repo.git.pull('origin', branch_name)
+            except GitCommandError as pull_e:
+                # 如果拉取失败，可能是因为远程没有该分支，或者历史不一致，忽略此错误继续推送
+                print(f"Warning: Git pull failed: {pull_e}")
+
             # 推送到GitHub
             push_info = origin.push(branch_name)
             
