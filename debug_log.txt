@@ -8,3 +8,6 @@
 [DEBUG] 2025-06-04 12:39:40 - [DEBUG] Committing with message: Auto sync at 2025-06-04 12:39:40
 [DEBUG] 2025-06-04 12:39:43 - [DEBUG] Pushing to origin/main
 [DEBUG] GitHub Sync Result: {'success': True, 'message': '成功同步到GitHub仓库', 'timestamp': '2025-06-04 12:39:46'}
+[DEBUG] /api/sync_github endpoint hit!
+[DEBUG] 2025-06-04 13:07:21 - [DEBUG] /api/sync_github endpoint hit!
+[DEBUG] 2025-06-04 13:07:21 - [DEBUG] Current working directory: D:\PythonSpace\cayden_de_blog
