@@ -1,4 +1,3 @@
-import os
 import time
 import subprocess
 
@@ -6,6 +5,7 @@ from utils import log_debug
 
 class GitHubSyncer:
     def sync_repo(self, username, password, repo_url):
+        import os # Import os inside the function
         log_debug("[DEBUG] /api/sync_github endpoint hit!")
 
         try:
