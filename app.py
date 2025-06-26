@@ -7,7 +7,7 @@ from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import pyotp
-from sync_github import sync_to_github
+from sync_github import update_to_github
 
 # Load environment variables
 load_dotenv()
