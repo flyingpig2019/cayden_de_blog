@@ -5,9 +5,9 @@ from git import Repo
 from git.exc import GitCommandError
 from flask import Flask, jsonify, request
 
-def sync_to_github(username, password, repo_url):
+def update_to_github(username, password, repo_url):
     """
-    将本地文件同步到GitHub仓库
+    将本地文件单向更新到GitHub仓库（不会拉取远程更改）
     
     Args:
         username: GitHub用户名
@@ -15,7 +15,7 @@ def sync_to_github(username, password, repo_url):
         repo_url: GitHub仓库URL
     
     Returns:
-        dict: 包含同步结果的字典
+        dict: 包含更新结果的字典
     """
     try:
         # 获取当前工作目录
@@ -75,12 +75,8 @@ def sync_to_github(username, password, repo_url):
                     repo.git.checkout('-b', 'main')
                     branch_name = 'main'
             
-            # 确保本地分支与远程同步
-            try:
-                repo.git.pull('origin', branch_name)
-            except GitCommandError as pull_e:
-                # 如果拉取失败，可能是因为远程没有该分支，或者历史不一致，忽略此错误继续推送
-                print(f"Warning: Git pull failed: {pull_e}")
+            # 跳过拉取远程更改（单向更新）
+            print("跳过拉取远程更改（单向更新模式）")
 
             # 推送到GitHub
             push_info = origin.push(branch_name)
