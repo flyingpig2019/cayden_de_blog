@@ -568,7 +568,7 @@ def sync_github():
     # Only perform actual sync if user is admin
     if is_admin:
         # 调用同步函数
-        result = sync_to_github(username, password, repo_url)
+        result = update_to_github(username, password, repo_url)
         return jsonify(result)
     else:
         # For non-admin users, return a message without performing sync
